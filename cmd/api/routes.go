@@ -13,6 +13,7 @@ func (app *application) routes() *chi.Mux {
 	router.NotFound(app.notFoundResponse)
 	router.MethodNotAllowed(app.methodNotAllowedResponse)
 
+	router.Get("/healtcheck", app.healtcheckHandler)
 	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("Welcome"))
 	})

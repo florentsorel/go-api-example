@@ -1,14 +1,19 @@
 package main
 
 import (
+	_ "embed"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 )
 
+//go:embed version.txt
+var version string
+
 type config struct {
 	port int
+	env  string
 }
 
 type application struct {
@@ -18,6 +23,7 @@ type application struct {
 func main() {
 	var cfg config
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
+	flag.StringVar(&cfg.env, "env", "development", "Environment (development|stating|production)")
 
 	app := &application{
 		config: cfg,
@@ -28,7 +34,7 @@ func main() {
 		Handler: app.routes(),
 	}
 
-	fmt.Printf("starting server on port %s", srv.Addr)
+	fmt.Printf("starting %s server on port %s", cfg.env, srv.Addr)
 
 	err := srv.ListenAndServe()
 	if err != nil {
