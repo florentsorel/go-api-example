@@ -6,6 +6,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
+
+	"github.com/rtransat/go-api-example/internal/jsonlog"
 )
 
 //go:embed version.txt
@@ -18,6 +21,7 @@ type config struct {
 
 type application struct {
 	config config
+	logger *jsonlog.Logger
 }
 
 func main() {
@@ -26,19 +30,27 @@ func main() {
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|stating|production)")
 
 	flag.Parse()
+
+	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
+
 	app := &application{
 		config: cfg,
+		logger: logger,
 	}
 
 	srv := &http.Server{
-		Addr:    fmt.Sprintf(":%d", cfg.port),
-		Handler: app.routes(),
+		Addr:     fmt.Sprintf(":%d", cfg.port),
+		Handler:  app.routes(),
+		ErrorLog: log.New(logger, "", 0),
 	}
 
-	fmt.Printf("starting %s server on port %s", cfg.env, srv.Addr)
+	logger.PrintInfo("starting server", map[string]string{
+		"addr": srv.Addr,
+		"env":  cfg.env,
+	})
 
 	err := srv.ListenAndServe()
 	if err != nil {
-		log.Fatalln(err)
+		logger.PrintFatal(err, nil)
 	}
 }
