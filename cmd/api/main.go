@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/rtransat/go-api-example/internal/data"
 	"github.com/rtransat/go-api-example/internal/jsonlog"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -33,6 +34,7 @@ type config struct {
 type application struct {
 	config config
 	logger *jsonlog.Logger
+	models data.Models
 }
 
 func main() {
@@ -63,6 +65,7 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		models: data.NewModels(db),
 	}
 
 	srv := &http.Server{

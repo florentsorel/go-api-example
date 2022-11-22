@@ -18,5 +18,7 @@ func (app *application) routes() *chi.Mux {
 		w.Write([]byte("Welcome"))
 	})
 
+	router.Get("/actors/{id}", app.showActorHandler)
+
 	return router
 }
