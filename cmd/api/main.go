@@ -40,7 +40,7 @@ func main() {
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|stating|production)")
 
-	dsn := os.Getenv("KINOW_API_DB_DSN")
+	dsn := os.Getenv("API_DB_DSN")
 	if len(dsn) == 0 {
 		dsn = "root:toor@/golang_api?parseTime=true"
 	}
