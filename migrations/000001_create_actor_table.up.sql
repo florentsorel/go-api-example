@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS Actor (
+    idActor BIGINT UNSIGNED AUTO_INCREMENT NOT NULL,
+    name TEXT NOT NULL,
+    isActive TINYINT(1) NOT NULL,
+    creationDate DATETIME NOT NULL,
+    lastUpdateDate DATETIME DEFAULT NULL,
+    PRIMARY KEY(idActor)
+)
