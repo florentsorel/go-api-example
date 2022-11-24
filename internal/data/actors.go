@@ -27,7 +27,7 @@ func (m ActorModel) Get(id int64) (*Actor, error) {
 	}
 
 	query := `
-        SELECT idActor, name, isActive, creationDate, LastUpdateDate
+        SELECT idActor, name, isActive, creationDate, lastUpdateDate
         FROM Actor
     WHERE idActor = ?`
 
