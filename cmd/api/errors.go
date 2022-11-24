@@ -25,7 +25,7 @@ func (app *application) errorReponse(w http.ResponseWriter, r *http.Request, sta
 func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Request, err error) {
 	app.logError(r, err)
 
-	message := "the server encoutered a problem and could not  process your request"
+	message := "the server encoutered a problem and could not process your request"
 	app.errorReponse(w, r, http.StatusInternalServerError, message)
 }
 
