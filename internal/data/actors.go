@@ -8,7 +8,7 @@ import (
 type Actor struct {
 	ID             int64    `json:"id"`
 	Name           string   `json:"name"`
-	Active         bool     `json:"active"`
+	Active         Bool     `json:"active"`
 	CreationDate   Time     `json:"created_at"`
 	LastUpdateDate NullTime `json:"updated_at"`
 }

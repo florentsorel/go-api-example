@@ -10,7 +10,10 @@ import (
 type (
 	NullTime sql.NullTime
 	Time     time.Time
+	Bool     bool
 )
+
+// DB
 
 func (nt *NullTime) Scan(value interface{}) error {
 	var t sql.NullTime
@@ -24,9 +27,20 @@ func (nt *NullTime) Scan(value interface{}) error {
 	} else {
 		*nt = NullTime{t.Time, true}
 	}
-
 	return nil
 }
+
+func (b *Bool) Scan(value interface{}) error {
+	val := value.(int64)
+	if val == 1 {
+		*b = true
+	} else {
+		*b = false
+	}
+	return nil
+}
+
+// JSON
 
 func (nt NullTime) MarshalJSON() ([]byte, error) {
 	if !nt.Valid {
@@ -38,5 +52,15 @@ func (nt NullTime) MarshalJSON() ([]byte, error) {
 
 func (t Time) MarshalJSON() ([]byte, error) {
 	val := fmt.Sprintf("\"%s\"", time.Time(t).Format("2006-01-02 15:04:05"))
+	return []byte(val), nil
+}
+
+func (b Bool) MarshalJSON() ([]byte, error) {
+	var val string
+	if b {
+		val = fmt.Sprint("1")
+	} else {
+		val = fmt.Sprint("0")
+	}
 	return []byte(val), nil
 }
