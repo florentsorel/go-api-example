@@ -22,6 +22,7 @@ func (app *application) showActorHandler(w http.ResponseWriter, r *http.Request)
 		default:
 			app.serverErrorResponse(w, r, err)
 		}
+		return
 	}
 
 	err = app.writeJSON(w, http.StatusOK, envelope{"actor": actor}, nil)
