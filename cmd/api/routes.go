@@ -15,6 +15,7 @@ func (app *application) routes() *chi.Mux {
 
 	router.Get("/actors/{id}", app.showActorHandler)
 	router.Post("/actors", app.createActorHandler)
+	router.Delete("/actors/{id}", app.deleteActorHandler)
 
 	return router
 }
