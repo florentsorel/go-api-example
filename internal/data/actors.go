@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"errors"
+	"time"
 )
 
 type Actor struct {
@@ -18,6 +19,28 @@ type ActorModel struct {
 }
 
 func (m ActorModel) Insert(actor *Actor) error {
+	query := `
+        INSERT INTO Actor(name, isActive, creationDate)
+        VALUES (?, ?, ?)
+    `
+
+	now := Time(time.Now())
+
+	args := []interface{}{actor.Name, actor.Active, now}
+
+	r, err := m.DB.Exec(query, args...)
+	if err != nil {
+		return err
+	}
+
+	id, err := r.LastInsertId()
+	if err != nil {
+		return err
+	}
+
+	*&actor.ID = id
+	*&actor.CreationDate = now
+
 	return nil
 }
 

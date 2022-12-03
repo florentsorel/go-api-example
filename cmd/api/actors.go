@@ -29,3 +29,32 @@ func (app *application) showActorHandler(w http.ResponseWriter, r *http.Request)
 		app.serverErrorResponse(w, r, err)
 	}
 }
+
+func (app *application) createActorHandler(w http.ResponseWriter, r *http.Request) {
+	var input struct {
+		Name   string
+		Active data.Bool
+	}
+
+	err := app.readJSON(w, r, &input)
+	if err != nil {
+		app.badRequestResponse(w, r, err)
+		return
+	}
+
+	actor := &data.Actor{
+		Name:   input.Name,
+		Active: input.Active,
+	}
+
+	err = app.models.Actor.Insert(actor)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
+
+	err = app.writeJSON(w, http.StatusCreated, envelope{"actor": actor}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
+}

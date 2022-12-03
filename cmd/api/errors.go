@@ -12,7 +12,7 @@ func (app *application) logError(r *http.Request, err error) {
 	})
 }
 
-func (app *application) errorReponse(w http.ResponseWriter, r *http.Request, status int, message any) {
+func (app *application) errorResponse(w http.ResponseWriter, r *http.Request, status int, message any) {
 	env := envelope{"error": message}
 
 	err := app.writeJSON(w, status, env, nil)
@@ -26,17 +26,21 @@ func (app *application) serverErrorResponse(w http.ResponseWriter, r *http.Reque
 	app.logError(r, err)
 
 	message := "the server encoutered a problem and could not process your request"
-	app.errorReponse(w, r, http.StatusInternalServerError, message)
+	app.errorResponse(w, r, http.StatusInternalServerError, message)
 }
 
 // notFoundResponse send a 404 error
 func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusNotFound)
-	w.Write([]byte("Page not found."))
+	message := "the requested resource could not be found"
+	app.errorResponse(w, r, http.StatusNotFound, message)
 }
 
 // methodNotAllowedResponse send a 405 error
 func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
-	w.WriteHeader(http.StatusMethodNotAllowed)
-	w.Write([]byte(fmt.Sprintf("Method \"%s\" is not allowed.", r.Method)))
+	message := fmt.Sprintf("the %s method is not supported for this resource", r.Method)
+	app.errorResponse(w, r, http.StatusMethodNotAllowed, message)
+}
+
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }

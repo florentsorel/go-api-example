@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"database/sql/driver"
 	"fmt"
 	"reflect"
 	"time"
@@ -30,6 +31,10 @@ func (nt *NullTime) Scan(value interface{}) error {
 	return nil
 }
 
+func (t Time) Value() (driver.Value, error) {
+	return driver.Value(time.Time(t).Format("2006-01-02 15:04:05")), nil
+}
+
 func (b *Bool) Scan(value interface{}) error {
 	val := value.(int64)
 	if val == 1 {
@@ -56,11 +61,8 @@ func (t Time) MarshalJSON() ([]byte, error) {
 }
 
 func (b Bool) MarshalJSON() ([]byte, error) {
-	var val string
 	if b {
-		val = fmt.Sprint("1")
-	} else {
-		val = fmt.Sprint("0")
+		return []byte("1"), nil
 	}
-	return []byte(val), nil
+	return []byte("0"), nil
 }
